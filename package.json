@@ -1,0 +1,39 @@
+{
+  "name": "bazaarlink-bulk-apikey",
+  "version": "1.0.0",
+  "description": "Mint BazaarLink accounts over REST — one account per key, verified live, any number, with a launcher.",
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": {
+    "bazaarlink-bulk-apikey": "cli.js",
+    "bazaarlink-bulk-apikey-launcher": "launcher.js"
+  },
+  "main": "cli.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node launcher.js",
+    "mint": "node cli.js"
+  },
+  "keywords": [
+    "api-key",
+    "bulk",
+    "register",
+    "launcher",
+    "bazaarlink",
+    "bulk",
+    "apikey"
+  ],
+  "files": [
+    "cli.js",
+    "launcher.js",
+    "mint.js",
+    "proxy.js",
+    "run.js",
+    "screen.js",
+    "verify.js",
+    "README.md",
+    "LICENSE"
+  ]
+}
