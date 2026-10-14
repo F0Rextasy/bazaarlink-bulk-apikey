@@ -165,8 +165,8 @@ node cli.js --help
 | `--model m` | `qwen/qwen3.7-flash:free` | model used for the live verification |
 | `--no-verify` | off | skip the completion check (not recommended) |
 
-The underlying scripts (`src/screen.js`, `src/mint.js`, `src/verify.js`, `src/run.js`) take the same
-flags and can be run on their own.
+The underlying scripts (`screen.js`, `mint.js`, `verify.js`, `run.js`) take the same flags and can be
+run on their own.
 
 ## 🛰️ Behind a proxy
 
