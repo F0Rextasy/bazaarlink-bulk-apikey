@@ -19,7 +19,7 @@
 [![Models](https://img.shields.io/badge/models-124-412991?style=for-the-badge)](https://bazaarlink.ai/en/docs)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
-[🛠 Quick start](#-quick-start) · [✅ Verified](#-verified-working--every-key-is-tested) · [🧭 How it works](#-how-it-works) · [🤖 Models](#-models) · [⚙️ Options](#️-cli-options) · [🛰️ Proxies](#️-behind-a-proxy) · [🐞 Issues](#-issues)
+[🛠 Quick start](#-quick-start) · [✅ Verified](#-verified-working--every-key-is-tested) · [🤖 Models & free tier](#-models--free-tier) · [🧭 How it works](#-how-it-works) · [⚙️ Options](#️-cli-options) · [🛰️ Proxies](#️-behind-a-proxy) · [🐞 Issues](#-issues)
 
 </div>
 
@@ -45,21 +45,45 @@ POST https://api.bazaarlink.ai/api/v1/agents/register   {"name":"api-mint-001-x7
      POST /v1/chat/completions  (qwen/qwen3.7-flash:free)  →  200, "pong", cost 0
 ```
 
-The one real constraint is **1 registration per IP per 24 hours**, so every account needs its own exit.
-This tool screens proxy exits, registers one account per exit, and refuses to write a key to `keys.txt`
-until that key has answered a live chat completion.
+The key is usable immediately, so the whole job is *scale*: **one registration per IP per 24 hours**
+means every account needs its own exit. This tool screens proxy exits, registers one account per exit,
+and refuses to write a key to `keys.txt` until that key has answered a live chat completion.
 
-### 🧭 How it works
+## 🤖 Models & free tier
 
+`GET /v1/models` returns **124 models**, and every key reaches all of them.
+
+**Free on a creditless account** (no claim, no top-up, no balance needed):
+
+| Model | Context | Input |
+| --- | --- | --- |
+| `qwen/qwen3.7-flash:free` | 1M | text + image + video — the one used for verification here |
+| `deepseek/deepseek-v4-flash-0731free:free` | 1.05M | text |
+| `auto:free` | — | router that picks a free model |
+
+**Paid** (same key, needs credits — zero markup over provider list price): `gpt-5.6-sol`,
+`gpt-5.6-terra`, `gpt-5.6-luna`, `claude-opus-5`, `claude-sonnet-5.5`, `claude-fable-5.1`,
+`gemini-3.8-flash`, `gemini-3.7-flash`, `grok-4.7`, `kimi-k3`, `glm-5.3`, `deepseek-v4-pro`,
+`qwen3.8-max`, and 110 more — the full 124-model catalogue is in [`models.json`](models.json).
+
+**Free-tier limits, measured per account:** **10 RPM / 60 requests per day**, 2 concurrent, shared
+across the free models, reset 00:00 UTC — and **20 RPM / 120 requests per day** once the account holds
+a balance. On top of that the free models share a **site-wide capacity of 15 RPM**, so a busy hour can
+answer `429` even when your own quota is untouched; the tool retries those with the server's
+`Retry-After`. There is no charge for free-model calls (`cost: 0` on every completion).
+
+**Want more of it?** The quota is per account, and `--count N` gives you N accounts — each with its own
+daily 60 requests, its own concurrency and its own free-model windows. The only real resource is fresh
+proxy exits.
+
+> Each agent account comes with a **7-day claim token**. Claiming it in a browser attaches the account
+> to a real login, which is what you need before adding credits or claiming the referral rebate.
+
+```bash
+curl https://api.bazaarlink.ai/v1/chat/completions \
+  -H "Authorization: Bearer sk-bl-…" -H "Content-Type: application/json" \
+  -d '{"model":"qwen/qwen3.7-flash:free","messages":[{"role":"user","content":"Reply with the single word: pong"}],"max_tokens":16}'
 ```
-screen.js  →  proxies.txt  ──probe──▶ live, distinct exits  →  outputs/exit-queue.json
-mint.js    →  one POST per queued exit  ──▶  201 + api_key  →  outputs/state.json (key on disk at once)
-verify.js  →  POST /v1/chat/completions on every unproven key  ──▶  keys.txt (only proven keys)
-run.js     →  drives the three in checkpointed rounds until --count accounts exist
-```
-
-Every phase is a separate short-lived process, so a run that is interrupted (or a proxy swarm that dies)
-never loses work — rerun and it continues from the checkpoint.
 
 ## 🛠 Quick start
 
@@ -102,8 +126,19 @@ Output lands in `keys.txt` (one key per line) and is mirrored to `%USERPROFILE%\
   q) Quit
 ```
 
-The launcher remembers your answers in `launcher.config.json` and runs the CLI with the right flags,
-which is the part people cannot guess from an obfuscated build.
+The launcher remembers your answers in `launcher.config.json` and runs the CLI with the right flags.
+
+### 🧭 How it works
+
+```
+screen.js  →  proxies.txt  ──probe──▶ live, distinct exits  →  outputs/exit-queue.json
+mint.js    →  one POST per queued exit  ──▶  201 + api_key  →  outputs/state.json (key on disk at once)
+verify.js  →  POST /v1/chat/completions on every unproven key  ──▶  keys.txt (only proven keys)
+run.js     →  drives the three in checkpointed rounds until --count accounts exist
+```
+
+Every phase is a separate short-lived process, so a run that is interrupted never loses work — rerun
+and it continues from the checkpoint.
 
 ## ✅ Verified working — every key is tested
 
@@ -111,11 +146,10 @@ Not a "probably works" list. Every key written to `keys.txt` is proven against t
 
 | Check | Result |
 | --- | --- |
-| `POST /api/v1/agents/register` | **30/30 → HTTP 201** with `api_key` |
-| Distinct egress IPs | **30/30** — no account shares an exit |
+| `POST /api/v1/agents/register` | **HTTP 201** with `api_key` |
+| Distinct egress IPs | **30/30 accounts — no account shares an exit** |
 | `POST /v1/chat/completions` (`qwen/qwen3.7-flash:free`) | **30/30 → HTTP 200**, real completion `content: "pong"`, `cost: 0` |
-| Independent re-check (this repo's published list, sampled by hand) | **HTTP 200**, `"pong"`, `cost: 0` |
-| `--no-verify` runs | none — the published batch is fully verified |
+| `GET /v1/models` | **200**, 124 models |
 
 Re-check the whole list at any time:
 
@@ -127,26 +161,6 @@ curl https://api.bazaarlink.ai/v1/chat/completions \
   -H "Authorization: Bearer sk-bl-…" -H "Content-Type: application/json" \
   -d '{"model":"qwen/qwen3.7-flash:free","messages":[{"role":"user","content":"Reply with the single word: pong"}],"max_tokens":16}'
 ```
-
-## 🤖 Models
-
-`GET /v1/models` returns **124 models**. Every key reaches all of them.
-
-**Free on a creditless account** (no claim, no top-up needed):
-
-| Model | Context | Input |
-| --- | --- | --- |
-| `qwen/qwen3.7-flash:free` | 1M | text + image + video |
-| `deepseek/deepseek-v4-flash-0731free:free` | 1.05M | text |
-| `auto:free` | — | router that picks a free model |
-
-**Paid** (same key, needs credits — zero markup over provider list price): `gpt-5.6-sol`, `gpt-5.6-terra`,
-`gpt-5.6-luna`, `claude-opus-5`, `claude-sonnet-5.5`, `claude-fable-5.1`, `gemini-3.8-flash`,
-`gemini-3.7-flash`, `grok-4.7`, `kimi-k3`, `glm-5.3`, `deepseek-v4-pro`, `qwen3.8-max`, and 110 more.
-
-Free-tier limits: **10 RPM / 60 requests per day** per account (20 / 120 with a balance), 2 concurrent,
-shared across models, reset 00:00 UTC, with a **site-wide free cap of 15 RPM** — which is why a busy hour
-answers `429` and the tool retries with the server's `Retry-After`.
 
 ## ⚙️ CLI options
 
@@ -184,9 +198,6 @@ interleaved with minting rather than one long pass.
 **There is no direct-connection fallback.** If the pool runs dry, the run stops and says so instead of
 minting from your own IP.
 
-Practical numbers from the published batch: ~1 usable exit per 20–40 lines in a random free pool, exits
-that answer for ~10–15 minutes. `--count` itself is unbounded; the binding resource is fresh exits.
-
 ## 📄 Files
 
 | Path | Contents |
@@ -197,19 +208,18 @@ that answer for ~10–15 minutes. `--count` itself is unbounded; the binding res
 | `outputs/state.json` | resumable run state (holds keys, git-ignored) |
 | `outputs/exit-queue.json` | screened exits waiting to be spent |
 
-> Each agent account comes with a **7-day claim token**. Claiming it in a browser attaches the account to
-> a real login, which is what you need before adding credits or claiming the referral rebate.
-
 ## 🐞 Issues
 
-BazaarLink's free pool is shared site-wide and does fill up at times; verification retries `429`s with the
-server's `Retry-After` and a short backoff. If a run stalls, check `outputs/accounts.json` — it records
-exactly which exits were spent and which failed. Something else looks off? **[Open an issue](https://github.com/F0Rextasy/bazaarlink-bulk-apikey/issues)**
-with the command you ran and the exact output; PRs are welcome.
+BazaarLink's free pool is shared site-wide and does fill up at times; verification retries `429`s with
+the server's `Retry-After` and a short backoff. If a run stalls, check `outputs/accounts.json` — it
+records exactly which exits were spent and which failed. Something else looks off?
+**[Open an issue](https://github.com/F0Rextasy/bazaarlink-bulk-apikey/issues)** with the command you
+ran and the exact output; PRs are welcome.
 
 ## 📄 License
 
-MIT © 2026 — see [LICENSE](LICENSE).
+MIT © 2026 — see [LICENSE](LICENSE). BazaarLink's own terms and rate limits apply to whatever you do
+with the keys; use this for your own accounts.
 
 <div align="center">
 
