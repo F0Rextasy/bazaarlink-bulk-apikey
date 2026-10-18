@@ -41,7 +41,7 @@ POST https://api.bazaarlink.ai/api/v1/agents/register   {"name":"api-mint-001-x7
 
 The key is usable immediately, so the whole job is *scale*: **one registration per IP per 24 hours** means every account needs its own exit. This tool screens proxy exits, registers one account per exit, and refuses to write a key to `keys.txt` until that key has answered a live chat completion.
 
-> **Status note (2026-10-18):** repo was archived earlier the same day while registrations were believed dead; a full re-audit the same evening re-verified the rail — fresh `POST /api/v1/agents/register` → `201` and the returned key answered a live chat completion (`qwen/qwen3.7-flash:free` → 200 `"pong"`), and a sequential sweep of the on-disk pool landed **23/31 keys chat-200** (the remaining 8 were `429`, the account-level 10 RPM cap retrying per key). Repo is **active** again; the flow below is the measured one.
+> **Status note (2026-10-18):** repo was archived earlier the same day while registrations were believed dead; a full re-audit the same evening re-verified the rail — a fresh `POST /api/v1/agents/register` returned `201` and the returned key answered a live chat completion (`qwen/qwen3.7-flash:free` → 200 `"pong"`), and a paced sweep showed live chat-200s for the pool (beyond that, only the account-level 10 RPM cap replies `429`). Repo is **active** again; the flow below is the measured one.
 
 ## 🎁 Free tier — how much you get
 
