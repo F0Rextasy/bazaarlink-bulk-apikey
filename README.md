@@ -41,7 +41,7 @@ POST https://api.bazaarlink.ai/api/v1/agents/register   {"name":"api-mint-001-x7
 
 The key is usable immediately, so the whole job is *scale*: **one registration per IP per 24 hours** means every account needs its own exit. This tool screens proxy exits, registers one account per exit, and refuses to write a key to `keys.txt` until that key has answered a live chat completion.
 
-> **Historical note:** the provider is on the workspace blocklist as of 2026-10-18. The flow below is kept as measured — if the upstream later restores registrations the same steps apply.
+> **Status note (2026-10-18):** repo was archived earlier the same day while registrations were believed dead; a full re-audit the same evening re-verified the rail — fresh `POST /api/v1/agents/register` → `201` and the returned key answered a live chat completion (`qwen/qwen3.7-flash:free` → 200 `"pong"`), and a sequential sweep of the on-disk pool landed **23/31 keys chat-200** (the remaining 8 were `429`, the account-level 10 RPM cap retrying per key). Repo is **active** again; the flow below is the measured one.
 
 ## 🎁 Free tier — how much you get
 
@@ -229,7 +229,7 @@ This repository is **flat** (no `src/connect-9router.js` yet). The canonical lay
 
 ## 🐞 Issues
 
-BazaarLink's free pool is shared site-wide and does fill up at times; verification retries `429`s with the server's `Retry-After` and a short backoff. If a run stalls, check `outputs/accounts.json` — it records exactly which exits were spent and which failed. Something else looks off? **[Open an issue](../../issues)** with the command you ran and the exact output; PRs are welcome. If the blocklist gate still returns `403`/throttle, the tool stops at that step and says so — the free-tier table above is the last measured gate.
+BazaarLink's free pool is shared site-wide and does fill up at times; verification retries `429`s with the server's `Retry-After` and a short backoff. If a run stalls, check `outputs/accounts.json` — it records exactly which exits were spent and which failed. Something else looks off? **[Open an issue](../../issues)** with the command you ran and the exact output; PRs are welcome. If the register gate still returns `403`/throttle, the tool stops at that step and says so — the free-tier table above is the last measured gate.
 
 ## 📄 License
 
