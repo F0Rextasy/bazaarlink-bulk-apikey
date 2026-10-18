@@ -58,7 +58,7 @@ The key is usable immediately, so the whole job is *scale*: **one registration p
 | Sign-up | `POST /api/v1/agents/register {name}` — no mailbox, no card |
 | The unit that scales | **one account = one key** → `--count N` is N daily 60-request budgets |
 
-> **Scope note:** bazaarlink/ionet are on the blocked-provider list — the table is the last measured gate; the 24 h/IP throttle is the binding resource.
+> **Scope note:** re-activated 2026-10-18 after a live re-audit (fresh `register` 201 + the key answered chat-200). The table is the last measured gate — the 24 h/IP throttle is the binding resource.
 
 > 💡 The free tier is set by BazaarLink and can change. Check the live numbers at [bazaarlink.ai](https://bazaarlink.ai) — and let the tool's own gate decide:
 
