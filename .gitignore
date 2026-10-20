@@ -13,3 +13,6 @@ launcher.config.json
 *.log
 .DS_Store
 Thumbs.db
+
+# exit pool file — never commit
+proxies.txt

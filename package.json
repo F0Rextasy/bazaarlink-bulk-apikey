@@ -5,16 +5,16 @@
   "license": "MIT",
   "type": "commonjs",
   "bin": {
-    "bazaarlink-bulk-apikey": "cli.js",
-    "bazaarlink-bulk-apikey-launcher": "launcher.js"
+    "bazaarlink-bulk-apikey": "src/cli.js",
+    "bazaarlink-bulk-apikey-launcher": "src/launcher.js"
   },
-  "main": "cli.js",
+  "main": "src/cli.js",
   "engines": {
     "node": ">=18"
   },
   "scripts": {
-    "start": "node launcher.js",
-    "mint": "node cli.js"
+    "start": "node src/launcher.js",
+    "mint": "node src/cli.js"
   },
   "keywords": [
     "api-key",
@@ -22,18 +22,12 @@
     "register",
     "launcher",
     "bazaarlink",
-    "bulk",
     "apikey"
   ],
   "files": [
-    "cli.js",
-    "launcher.js",
-    "mint.js",
-    "proxy.js",
-    "run.js",
-    "screen.js",
-    "verify.js",
+    "src",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "models.json"
   ]
 }
