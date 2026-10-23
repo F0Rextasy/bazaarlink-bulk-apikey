@@ -1,7 +1,7 @@
 {
   "name": "bazaarlink-bulk-apikey",
   "version": "1.0.0",
-  "description": "Mint BazaarLink accounts over REST — one account per key, verified live, any number, with a launcher.",
+  "description": "Bulk-create BazaarLink accounts with auto-generated API keys — OpenAI-compatible inference + 9Router connector.",
   "license": "MIT",
   "type": "commonjs",
   "bin": {
@@ -14,7 +14,9 @@
   },
   "scripts": {
     "start": "node src/launcher.js",
-    "mint": "node src/cli.js"
+    "mint": "node src/cli.js",
+    "9router": "node src/connect-9router.js",
+    "omniroute": "node src/connect-omniroute.js"
   },
   "keywords": [
     "api-key",
@@ -27,7 +29,6 @@
   "files": [
     "src",
     "README.md",
-    "LICENSE",
-    "models.json"
+    "LICENSE"
   ]
 }

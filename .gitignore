@@ -2,6 +2,7 @@ node_modules/
 
 # generated material — never commit
 keys.txt
+proxies.txt
 keys.json
 *.txt
 accounts.json
@@ -13,6 +14,3 @@ launcher.config.json
 *.log
 .DS_Store
 Thumbs.db
-
-# exit pool file — never commit
-proxies.txt
