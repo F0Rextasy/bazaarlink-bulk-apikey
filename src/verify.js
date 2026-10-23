@@ -16,6 +16,17 @@ const { redactAccounts } = require('./redact');
 
 const API = 'api.bazaarlink.ai';
 const OUT = path.join(__dirname, '..');
+
+/** Dead keys leave keys.txt and are parked here — repo root, like keys.txt. */
+const KEYS_DEAD_FILE = path.join(OUT, 'keys-dead.txt');
+/** A verdict only a dead key can answer — 0 (transport), 429 and 5xx are excluded. */
+const deadVerdict = (status, ok) => !ok && status !== 0 && status !== 429 && status < 500;
+/** key<TAB>reason<TAB>ISO date, one line per dead key, parked next to keys.txt. */
+function recordDeadKey(key, reason) {
+  try {
+    fs.appendFileSync(KEYS_DEAD_FILE, `${key}\t${String(reason).replace(/\s+/g, ' ').slice(0, 100)}\t${new Date().toISOString()}\n`);
+  } catch (e) { /* diagnostics must never break the run */ }
+}
 const POOLS = [
   process.env.BAZAARLINK_PROXIES || path.join(__dirname, '..', 'proxies.txt'),
   path.join(__dirname, '..', 'proxies.txt'),
@@ -124,6 +135,7 @@ async function liveProxy(pool) {
         cost = j?.usage?.cost ?? null;
       } catch { /* keep null */ }
       result = { ok: status === 200 && !!content, status, content, cost, body: res.error || res.body.slice(0, 200), via: label(proxy) };
+      if (deadVerdict(status, result.ok)) recordDeadKey(acct.key, `chat ${status}`);
       if (result.ok || status === 401 || status === 403) break;
       if (status === 429) { await sleep((Number(res.headers?.['retry-after'] || 20)) * 1000 + 3000); continue; }
     }

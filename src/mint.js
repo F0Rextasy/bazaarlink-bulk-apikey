@@ -33,6 +33,17 @@ const OUT = path.join(__dirname, '..');
 const QUEUE_FILE = `${OUT}/outputs/exit-queue.json`;
 const DEFAULT_COUNT = 30;
 
+/** Dead keys leave keys.txt and are parked here — repo root, like keys.txt. */
+const KEYS_DEAD_FILE = path.join(OUT, 'keys-dead.txt');
+/** A verdict only a dead key can answer — 0 (transport), 429 and 5xx are excluded. */
+const deadVerdict = (status, ok) => !ok && status !== 0 && status !== 429 && status < 500;
+/** key<TAB>reason<TAB>ISO date, one line per dead key, parked next to keys.txt. */
+function recordDeadKey(key, reason) {
+  try {
+    fs.appendFileSync(KEYS_DEAD_FILE, `${key}\t${String(reason).replace(/\s+/g, ' ').slice(0, 100)}\t${new Date().toISOString()}\n`);
+  } catch (e) { /* diagnostics must never break the run */ }
+}
+
 // ------------------------------------------------------------------- args
 
 function parseArgs(argv) {
@@ -200,6 +211,7 @@ async function listModels(key, proxy) {
       const v = await verifyKey(acct.key, args.model, proxy);
       acct.verify = v;
       log(`     verify ${v.ok ? 'OK' : 'FAIL'} status=${v.status} content=${JSON.stringify(v.content)} cost=${v.cost}${v.ok ? '' : ` ${v.body}`}`);
+      if (deadVerdict(v.status, v.ok)) recordDeadKey(acct.key, `chat ${v.status}`);
       fs.writeFileSync(stateFile, JSON.stringify(state, null, 2));
     }
     await sleep(1500);
