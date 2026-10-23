@@ -21,7 +21,7 @@
 [![OmniRoute](https://img.shields.io/badge/OmniRoute-connector-8B5CF6?style=for-the-badge)](#-connect-to-omniroute)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
-[🛠 Hızlı başlangıç](#-quick-start) · [🎁 Ücretsiz katman](#-free-tier--how-much-you-get) · [🤖 Modeller](#-models--all-124-of-them) · [🧪 API'yi kullanma](#-how-to-use-the-api) · [✅ Doğrulandı](#-verified-working--every-key-is-tested) · [🧭 Nasıl çalışır](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [🔌 OmniRoute](#-connect-to-omniroute) · [⚙️ Seçenekler](#️-cli-options) · [🛰️ Proxy'ler](#️-behind-a-proxy) · [🐞 Sorunlar](#-issues)
+[🛠 Hızlı başlangıç](#-quick-start) · [🎁 Ücretsiz katman](#-free-tier--how-much-you-get) · [🤖 Modeller](#-models--all-124-of-them) · [🧪 API'yi kullanın](#-how-to-use-the-api) · [✅ Doğrulandı](#-verified-working--every-key-is-tested) · [🧭 Nasıl çalışır](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [🔌 OmniRoute](#-connect-to-omniroute) · [⚙️ Seçenekler](#️-cli-options) · [🛰️ Proxy'ler](#️-behind-a-proxy) · [🐞 Sorunlar](#-issues)
 
 </div>
 
@@ -46,7 +46,7 @@ POST https://api.bazaarlink.ai/api/v1/agents/register   {"name":"api-mint-001-x7
               └─▶ outputs/   hesap, çıkış IP'si, proxy, doğrulama kaydı
 ```
 
-Anahtar hemen kullanılabilir, yani tüm iş *ölçeklendirmedir*: **IP başına 24 saatte bir kayıt** demek, her hesabın kendi çıkışına ihtiyacı olduğu anlamına gelir. Bu araç proxy çıkışlarını tarar, her çıkış için bir hesap kaydeder ve bir anahtar canlı bir sohbet tamamlama isteğine yanıt verene kadar `keys.txt` dosyasına yazmayı reddeder.
+Anahtar hemen kullanılabilir, yani tüm iş *ölçeklendirmedir*: **IP başına 24 saatte bir kayıt** demek, her hesabın kendi çıkışına ihtiyacı olduğu anlamına gelir. Bu araç proxy çıkışlarını tarar, her çıkış için bir hesap kaydeder ve o anahtar canlı bir sohbet tamamlama isteğine yanıt verene kadar `keys.txt` dosyasına anahtar yazmayı reddeder.
 
 > **Tarihsel not:** sağlayıcı 2026-10-18 itibarıyla çalışma alanı engel listesindedir. Aşağıdaki akış ölçüldüğü gibi korunmuştur — sağlayıcı ileride kayıtları yeniden açarsa aynı adımlar geçerlidir.
 
@@ -59,7 +59,7 @@ Anahtar hemen kullanılabilir, yani tüm iş *ölçeklendirmedir*: **IP başına
 | Kayıt kapısı | **Çıkış IP'si başına 24 saatte 1 kayıt** — hesap başına bir çıkış |
 | Ücretsiz modeller | `qwen/qwen3.7-flash:free` (1M bağlam, doğrulayıcı), `deepseek/deepseek-v4-flash-0731free:free` (1.05M), `auto:free` (yönlendirici) |
 | Ücretsiz model kotası | **10 RPM / günde 60 istek**, 2 eşzamanlı, ücretsiz modeller arasında paylaşılır, 00:00 UTC'de sıfırlanır |
-| Bakiyeyle | Hesap kredi tuttuğunda **20 RPM / günde 120 istek** |
+| Bakiyeyle | Hesapta kredi olduğunda **20 RPM / günde 120 istek** |
 | Site geneli ücretsiz kapasite | **15 RPM** paylaşılır — yoğun bir saatte kendi kotanız dokunulmamış olsa bile `429` yanıtı gelebilir; araç `Retry-After` ile yeniden dener |
 | Ücretsiz çağrının maliyeti | Her tamamlamada `cost: 0` |
 | Kayıt | `POST /api/v1/agents/register {name}` — posta kutusu yok, kart yok |
@@ -115,7 +115,7 @@ print(client.chat.completions.create(model="qwen/qwen3.7-flash:free",
       messages=[{"role":"user","content":"hi"}]).choices[0].message.content)
 ```
 
-**Özel temel URL kullanan herhangi bir ajan** (Cursor, OpenCode, Kilo Code …): temel URL'yi `https://api.bazaarlink.ai/v1` olarak ayarlayın, bir anahtar yapıştırın, yukarıdaki tablodan herhangi bir kimlik seçin. Kredisiz bir anahtarda ücretsiz model çağrısı `cost: 0` ile yanıt verir.
+**Özel temel URL kullanan herhangi bir ajan** (Cursor, OpenCode, Kilo Code …): temel URL'yi `https://api.bazaarlink.ai/v1` olarak ayarlayın, bir anahtar yapıştırın, yukarıdaki tablodan herhangi bir kimlik seçin. Kredisiz bir anahtarla ücretsiz model çağrısı `cost: 0` ile yanıt verir.
 
 ## 🛠 Hızlı başlangıç
 
@@ -123,21 +123,21 @@ print(client.chat.completions.create(model="qwen/qwen3.7-flash:free",
 git clone https://github.com/F0Rextasy/bazaarlink-bulk-apikey.git
 cd bazaarlink-bulk-apikey
 
-# 1) proxy listeniz — her satırda bir tane (http://host:port | socks5://host:port | host:port)
+# 1) your proxy list — one per line (http://host:port | socks5://host:port | host:port)
 printf 'socks5://127.0.0.1:1080\n' > proxies.txt
 
-# 2) başlayın
-node launcher.js          # etkileşimli: oluştur / doğrula / tara / ayarlar
+# 2) go
+node src/launcher.js      # interactive: mint / verify / screen / settings
 
-# veya doğrudan:
-node cli.js --count 30    # herhangi bir N — 30 sadece varsayılan örnektir
+# or directly:
+node src/cli.js --count 30    # any N — 30 is just the default sample
 ```
 
-Çıktı `keys.txt` dosyasına düşer (her satırda bir anahtar) ve `%USERPROFILE%\\bazaarlink-keys.txt` dosyasına yansıtılır. Bir anahtar **yalnızca** `qwen/qwen3.7-flash:free` üzerinde canlı bir `POST /v1/chat/completions` isteği `cost: 0` ile `200` yanıtı verdikten **sonra** yazılır.
+Çıktı `keys.txt` dosyasına düşer (her satırda bir anahtar) ve `%USERPROFILE%\\bazaarlink-keys.txt` dosyasına yansıtılır. Bir anahtar, `qwen/qwen3.7-flash:free` üzerinde canlı bir `POST /v1/chat/completions` isteği `cost: 0` ile `200` yanıtı verene kadar **ancak ondan sonra** yazılır.
 
 ### 🖱️ Başlatıcı
 
-Başlatıcı, **depo kökündeki** `launcher.js` dosyasıdır (bu depo düz yapıdadır — `src/` yoktur). Yanıtlarınızı `launcher.config.json` dosyasında hatırlar ve `cli.js` dosyasını doğru bayraklarla çalıştırır. `node launcher.js` oluştur / doğrula / tara / ayarlar seçeneklerini gösterir; başlık, `proxies.txt` dosyasının kaç çıkış tuttuğunu ve diskte kaç anahtar olduğunu önizler.
+Başlatıcı `src/launcher.js` dosyasıdır; yönlendirdiği düz betikler (`src/cli.js`, `src/run.js`, `src/screen.js`, `src/verify.js`) aynı bayrakları kendi başlarına kabul eder. Yanıtlarınızı `launcher.config.json` dosyasında hatırlar ve CLI'yi doğru bayraklarla çalıştırır. `node src/launcher.js` mint / verify / screen / settings seçeneklerini gösterir; başlık, `proxies.txt` dosyasının kaç çıkış içerdiğini ve diskte kaç anahtar olduğunu önizler.
 
 ## ✅ Çalıştığı doğrulandı — her anahtar test edilir
 
@@ -146,18 +146,18 @@ Başlatıcı, **depo kökündeki** `launcher.js` dosyasıdır (bu depo düz yap�
 | Kontrol | Sonuç |
 | --- | --- |
 | `POST /api/v1/agents/register` | `api_key` ile **HTTP 201** |
-| Farklı çıkış IP'leri | **30/30 hesap — hiçbir hesap çıkış paylaşmıyor** (ölçüldü) |
+| Farklı çıkış IP'leri | **30/30 hesap — hiçbir hesap bir çıkışı paylaşmıyor** (ölçüldü) |
 | `POST /v1/chat/completions` (`qwen/qwen3.7-flash:free`) | **30/30 → HTTP 200**, gerçek tamamlama `content: "pong"`, `cost: 0` |
 | `GET /v1/models` | **200**, 124 model |
 
 Tüm listeyi istediğiniz zaman yeniden kontrol edin:
 
 ```bash
-node cli.js --verify-only        # kanıtlanmamış herhangi bir anahtarı doğrula
-node cli.js --verify-only --all  # her anahtarı sıfırdan yeniden doğrula
+node src/cli.js --verify-only        # verify any unproven key
+node src/cli.js --verify-only --all  # re-verify every key from scratch
 ```
 
-> **Kalite kapıları.** Buradaki her anahtar `keys.txt` dosyasına yazılmadan önce canlı bir `chat-200` geçti
+> **Kalite kapıları.** Buradaki her anahtar `keys.txt` dosyasına yazılmadan önce canlı bir `chat-200` testini geçti
 > (ölü anahtarlar asla gönderilmez). Yönlendirici kombinasyonları model düzeyinde aynı kuralı izler: bir giriş
 > **yalnızca model `chat-200` yanıtı veriyorsa ve araçları çağırabiliyorsa** eklenir — araç desteği olmayan bir model,
 > ölü bir anahtar veya ölü bir sağlayıcı eklenmek yerine çıkarılır. Doğrulama adımını istediğiniz zaman yeniden çalıştırın;
@@ -166,28 +166,28 @@ node cli.js --verify-only --all  # her anahtarı sıfırdan yeniden doğrula
 ## 🧭 Nasıl çalışır
 
 ```
-gelen kutusu (hesap başına bir adres)                            hesap başına yeni bir adres
+inbox (one address per account)                                  a fresh address per account
    │
-   ├─▶ kayıt: BazaarLink sayfası → e-posta adresi → gelen kutusundan kod / bağlantı
-   ├─▶ oturum: hesabın çerezleri veya erişim belirteci elde
-   ├─▶ anahtar oluşturma: hesabın anahtar uç noktası → düz metin anahtar bir kez döndürülür (hemen diske yazılır)
-   └─▶ canlı kanıt: POST https://api.bazaarlink.ai/v1/chat/completions → gerçek içerik = anahtar canlı
+   ├─▶ sign-up: BazaarLink page → e-mail address → code / link from the inbox
+   ├─▶ session: the account's cookies or access token in hand
+   ├─▶ key mint: the account's key endpoint → plaintext key returned once (written to disk immediately)
+   └─▶ live proof: POST https://api.bazaarlink.ai/v1/chat/completions → real content = the key is live
 ```
 
 | Adım | Çağrı | Notlar |
 | --- | --- | --- |
-| tara | `screen.js` → `proxies.txt` ──yokla──▶ canlı, farklı çıkışlar → `outputs/exit-queue.json` | bir çıkış 24 saatte en fazla bir kez harcanır |
-| kaydet | `POST https://api.bazaarlink.ai/api/v1/agents/register {name}` | `201 {api_key, claim_token, free_model}` |
-| doğrula | `POST https://api.bazaarlink.ai/v1/chat/completions` (`qwen/qwen3.7-flash:free`) | atlatılabilir kapı — `Retry-After` içeren bir `429` yeniden denenir |
-| kalıcılaştır | `keys.txt` + `outputs/state.json` + sağlayıcı yansıması `%USERPROFILE%\\bazaarlink-keys.txt` | bir çalıştırma kontrol noktasına alınır: yeniden çalıştırma kaldığı yerden devam eder |
+| tarama | `screen.js` → `proxies.txt` ──yokla──▶ canlı, farklı çıkışlar → `outputs/exit-queue.json` | bir çıkış 24 saatte en fazla bir kez harcanır |
+| kayıt | `POST https://api.bazaarlink.ai/api/v1/agents/register {name}` | `201 {api_key, claim_token, free_model}` |
+| doğrulama | `POST https://api.bazaarlink.ai/v1/chat/completions` (`qwen/qwen3.7-flash:free`) | hayatta kalınabilir kapı — `Retry-After` içeren bir `429` yeniden denenir |
+| kalıcılaştırma | `keys.txt` + `outputs/state.json` + sağlayıcı yansıması `%USERPROFILE%\\bazaarlink-keys.txt` | bir çalıştırma kontrol noktasına alınır: yeniden çalıştırma kaldığı yerden devam eder |
 
 ## ⚙️ CLI seçenekleri
 
 ```bash
-node cli.js --count N                 # çıkışları tara → oluştur → doğrula (herhangi bir N, varsayılan 30)
-node cli.js --verify-only [--all]     # kanıtlanmamış / tüm anahtarları yeniden doğrula
-node cli.js --screen --chunk 200      # yalnızca proxy listenizi tarayın
-node cli.js --help
+node src/cli.js --count N                 # screen exits → mint → verify (any N, default 30)
+node src/cli.js --verify-only [--all]     # re-verify unproven / all keys
+node src/cli.js --screen --chunk 200      # only screen your proxy list
+node src/cli.js --help
 ```
 
 | Seçenek | Varsayılan | Anlamı |
@@ -198,39 +198,39 @@ node cli.js --help
 | `--model m` | `qwen/qwen3.7-flash:free` | canlı doğrulama için kullanılan model |
 | `--no-verify` | kapalı | tamamlama kontrolünü atla (önerilmez) |
 
-Temel betikler (`screen.js`, `mint.js`, `verify.js`, `run.js`) aynı bayrakları alır ve kendi başlarına çalıştırılabilir. Tüm yollar (`proxies.txt`, `keys.txt`, `outputs/`) bu düz düzende **depo kökündedir**.
+Temel betikler (`src/screen.js`, `src/mint.js`, `src/verify.js`, `src/run.js`) aynı bayrakları kabul eder ve kendi başlarına çalıştırılabilir. Tüm veri yolları (`proxies.txt`, `keys.txt`, `outputs/`) **depo kökünde**, `src/` klasörünün bir üst seviyesindedir.
 
 ## 🛰️ Proxy arkasında
 
 **Gerekli.** BazaarLink, IP başına 24 saatte bir kayda izin verir, yani tek bir bağlantı günde bir hesap üretebilir. Havuz, deponun yanındaki `proxies.txt` dosyasından veya `$BAZAARLINK_PROXIES` ortam değişkeninden okunur.
 
-Her istek `https.request` + `createAgent(parseProxy(line))` kullanır — SOCKS4/4a, SOCKS5 ve HTTP CONNECT hepsi çalışır. `undici`'nin `fetch`'i asla kullanılmaz, çünkü `agent` seçeneğini yok sayar ve gerçek IP'nizi sessizce sızdırır.
+Her istek `https.request` + `createAgent(parseProxy(line))` kullanır — SOCKS4/4a, SOCKS5 ve HTTP CONNECT çalışır. `undici`'nin `fetch`'i asla kullanılmaz, çünkü `agent` seçeneğini yok sayar ve gerçek IP'nizi sessizce sızdırır.
 
-Her proxy kuyruğa alınmadan önce canlı olarak taranır (API erişilebilirliği), bir hesapta harcanmış bir çıkış asla yeniden kullanılmaz ve ücretsiz çıkışlar dakikalar içinde bozulur — bu nedenle tarama, tek uzun geçiş yerine oluşturma ile iç içe geçmiş kısa kontrol noktalı parçalar halinde çalışır.
+Her proxy kuyruğa alınmadan önce canlı olarak taranır (API erişilebilirliği), bir hesap için harcanmış bir çıkış asla yeniden kullanılmaz ve ücretsiz çıkışlar dakikalar içinde bozulur — bu nedenle tarama, tek uzun geçiş yerine kısa kontrol noktalı parçalar halinde oluşturma ile iç içe çalışır.
 
-**Doğrudan bağlantı yedeği yoktur.** Havuz tükenirse, çalıştırma durur ve kendi IP'nizden oluşturmak yerine bunu bildirir.
+**Doğrudan bağlantı yedeği yoktur.** Havuz tükenirse, çalıştırma kendi IP'nizden oluşturmak yerine durur ve bunu bildirir.
 
 ## 📄 Dosyalar
 
 | Yol | İçerik |
 | --- | --- |
 | `keys.txt` | her satırda bir anahtar — git tarafından yok sayılır, asla işlenmez |
-| [`models.json`](models.json) | tam 124 modelli katalog (ölçülen `GET /v1/models`) |
-| `outputs/accounts.json` | ham anahtar içermeyen hesap başına kayıt (ad, çıkış, proxy, durum, doğrulama) |
+| [`models.json`](models.json) | tam 124 modellik katalog (ölçülen `GET /v1/models`) |
+| `outputs/accounts.json` | hesap başına kayıt (ad, çıkış, proxy, durum, doğrulama), ham anahtar içermez |
 | `outputs/state.json` | devam ettirilebilir çalıştırma durumu (anahtarları tutar, git tarafından yok sayılır) |
 | `outputs/exit-queue.json` | harcanmayı bekleyen taranmış çıkışlar |
-| `cli.js` · `launcher.js` · `mint.js` · `screen.js` · `verify.js` · `run.js` · `proxy.js` | araç — hepsi **depo kökünde** (düz düzen) |
+| `src/cli.js` · `src/launcher.js` · `src/mint.js` · `src/screen.js` · `src/verify.js` · `src/run.js` · `src/proxy.js` | araç — `src/` betikleri tutar, veri dosyaları depo kökünde kalır |
 
-## 🔌 9Router'a bağlanma
+## 🔌 9Router'a bağlanın
 
 [9Router](https://9router.com) kendi kendine barındırılan, OpenAI uyumlu bir yönlendiricidir. BazaarLink, `https://api.bazaarlink.ai/v1` adresinde OpenAI uyumlu çıkarım sunar, bu nedenle bağlayıcı **bir `openai-compatible` sağlayıcı düğümü** kaydeder (önek `bazaarlink`) ve `keys.txt` içindeki her anahtarı bir bağlantı olarak ekler — `bazaarlink-001`, `bazaarlink-002`, … Yeniden çalıştırmak etkisizdir (idempotent).
 
 ```bash
-node src/connect-9router.js                    # keys.txt içindeki her anahtar
-node src/connect-9router.js --model <id>       # bağlantının varsayılan modelini sabitle
+node src/connect-9router.js                    # every key in keys.txt
+node src/connect-9router.js --model <id>       # pin the connection's default model
 ```
 
-Varsayılanlar: `--base http://localhost:20128`, `--password 123456`, `--name "BazaarLink"`, `--prefix bazaarlink`, `--base-url https://api.bazaarlink.ai/v1`, `--model qwen/qwen3.7-flash:free`. Modeller daha sonra `bazaarlink/<model id>` olarak sunulur — `bazaarlink/qwen/qwen3.7-flash:free`, `bazaarlink/deepseek/deepseek-v4-flash-0731free:free`, `bazaarlink/auto:free` — tüm bağlantılar arasında yük dengelenir:
+Varsayılanlar: `--base http://localhost:20128`, `--password 123456`, `--name "BazaarLink"`, `--prefix bazaarlink`, `--base-url https://api.bazaarlink.ai/v1`, `--model qwen/qwen3.7-flash:free`. Modeller daha sonra `bazaarlink/<model id>` olarak sunulur — `bazaarlink/qwen/qwen3.7-flash:free`, `bazaarlink/deepseek/deepseek-v4-flash-0731free:free`, `bazaarlink/auto:free` — her bağlantı arasında yük dengelenir:
 
 ```bash
 curl http://localhost:20128/v1/chat/completions \
@@ -239,13 +239,13 @@ curl http://localhost:20128/v1/chat/completions \
   -d '{"model":"bazaarlink/qwen/qwen3.7-flash:free","messages":[{"role":"user","content":"hi"}]}'
 ```
 
-## 🔌 OmniRoute'a bağlanma
+## 🔌 OmniRoute'a bağlanın
 
 [OmniRoute](https://omniroute.online) kendi kendine barındırılan, OpenAI uyumlu bir yönlendiricidir. Bağlayıcı orada da aynı işi yapar — bir `openai-compatible` düğümü (önek `bazaarlink`), `keys.txt` içindeki her anahtar için bir bağlantı:
 
 ```bash
-node src/connect-omniroute.js                  # keys.txt içindeki her anahtar
-node src/connect-omniroute.js --model <id>     # bağlantının varsayılan modelini sabitle
+node src/connect-omniroute.js                  # every key in keys.txt
+node src/connect-omniroute.js --model <id>     # pin the connection's default model
 ```
 
 Varsayılanlar: `--base http://localhost:20128`, `--password 123456`, `--name "BazaarLink"`, `--prefix bazaarlink`, `--base-url https://api.bazaarlink.ai/v1`, `--model qwen/qwen3.7-flash:free`.
@@ -262,14 +262,14 @@ curl http://localhost:20128/v1/chat/completions \
 | | |
 | --- | --- |
 | 🏢 Sağlayıcı | **BazaarLink** — [bazaarlink.ai](https://bazaarlink.ai) |
-| 🎁 Sağlayıcının verdikleri | Tek bir kimlik doğrulamasız POST ile 124 model — ücretsiz qwen3.7-flash:free, e-posta yok, kart yok |
-| 🔑 Bir anahtar size ne kazandırır | kendi hesabına kapsanmış bir API anahtarı: aşağıdaki uç noktada 124 model kimliği, planınızın limitlerinde. Kota **hesapta** yaşar, bu aracın anahtar başına bir hesap oluşturmasının nedeni tam olarak budur |
+| 🎁 Sağlayıcının verdikleri | Tek bir kimlik doğrulaması gerektirmeyen POST ile 124 model — ücretsiz qwen3.7-flash:free, e-posta yok, kart yok |
+| 🔑 Bir anahtar size ne kazandırır | kendi hesabına kapsanmış bir API anahtarı: aşağıdaki uç noktada 124 model kimliği, planınızın limitlerinde. Kota **hesapta** yaşar, bu yüzden bu araç anahtar başına bir hesap oluşturur |
 | 🌐 API şekli | OpenAI uyumlu: `POST https://api.bazaarlink.ai/v1/chat/completions` |
 | 🔒 Verileriniz | yalnızca bazaarlink.ai ve yapılandırdığınız gelen kutusu arka ucuyla iletişim kurulur; anahtarlar makinenizde kalır |
 
 ## 🐞 Sorunlar
 
-BazaarLink'in ücretsiz havuzu site genelinde paylaşılır ve zaman zaman dolar; doğrulama, `429` yanıtlarını sunucunun `Retry-After` değeri ve kısa bir geri çekilme ile yeniden dener. Bir çalıştırma takılırsa `outputs/accounts.json` dosyasını kontrol edin — hangi çıkışların harcandığını ve hangilerinin başarısız olduğunu tam olarak kaydeder. Başka bir şey ters görünüyor mu? Çalıştırdığınız komut ve tam çıktıyla **[bir sorun açın](../../issues)**; PR'lar memnuniyetle karşılanır. Engel listesi kapısı hâlâ `403`/kısıtlama döndürüyorsa, araç o adımda durur ve bunu bildirir — yukarıdaki ücretsiz katman tablosu son ölçülen kapıdır.
+BazaarLink'in ücretsiz havuzu site genelinde paylaşılır ve zaman zaman dolar; doğrulama, `429` yanıtlarını sunucunun `Retry-After` değeri ve kısa bir geri çekilme ile yeniden dener. Bir çalıştırma takılırsa `outputs/accounts.json` dosyasını kontrol edin — hangi çıkışların harcandığını ve hangilerinin başarısız olduğunu tam olarak kaydeder. Başka bir şey ters görünüyor mu? Çalıştırdığınız komut ve tam çıktıyla birlikte **[bir sorun açın](../../issues)**; PR'lar memnuniyetle karşılanır. Engel listesi kapısı hâlâ `403`/kısıtlama döndürüyorsa, araç o adımda durur ve bunu bildirir — yukarıdaki ücretsiz katman tablosu son ölçülen kapıdır.
 
 ## 📄 Lisans
 

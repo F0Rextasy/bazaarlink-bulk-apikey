@@ -21,7 +21,7 @@
 [![OmniRoute](https://img.shields.io/badge/OmniRoute-connector-8B5CF6?style=for-the-badge)](#-connect-to-omniroute)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
-[🛠 Início rápido](#-quick-start) · [🎁 Camada gratuita](#-free-tier--how-much-you-get) · [🤖 Modelos](#-models--all-124-of-them) · [🧪 Use a API](#-how-to-use-the-api) · [✅ Verificado](#-verified-working--every-key-is-tested) · [🧭 Como funciona](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [🔌 OmniRoute](#-connect-to-omniroute) · [⚙️ Opções](#️-cli-options) · [🛰️ Proxies](#️-behind-a-proxy) · [🐞 Problemas](#-issues)
+[🛠 Início rápido](#-quick-start) · [🎁 Nível gratuito](#-free-tier--how-much-you-get) · [🤖 Modelos](#-models--all-124-of-them) · [🧪 Use a API](#-how-to-use-the-api) · [✅ Verificado](#-verified-working--every-key-is-tested) · [🧭 Como funciona](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [🔌 OmniRoute](#-connect-to-omniroute) · [⚙️ Opções](#️-cli-options) · [🛰️ Proxies](#️-behind-a-proxy) · [🐞 Problemas](#-issues)
 
 </div>
 
@@ -46,46 +46,46 @@ POST https://api.bazaarlink.ai/api/v1/agents/register   {"name":"api-mint-001-x7
               └─▶ outputs/   conta, IP de saída, proxy, registro de verificação
 ```
 
-A chave é utilizável imediatamente, então todo o trabalho é *escala*: **um registro por IP a cada 24 horas** significa que cada conta precisa da sua própria saída. Esta ferramenta triagem as saídas de proxy, registra uma conta por saída e se recusa a gravar uma chave em `keys.txt` até que essa chave tenha respondido a uma conclusão de chat ao vivo.
+A chave é utilizável imediatamente, então todo o trabalho é *escala*: **um registro por IP a cada 24 horas** significa que cada conta precisa de sua própria saída. Esta ferramenta faz a triagem das saídas de proxy, registra uma conta por saída e se recusa a gravar uma chave em `keys.txt` até que essa chave tenha respondido a uma conclusão de chat ao vivo.
 
-> **Nota histórica:** o provedor está na lista de bloqueio do workspace a partir de 2026-10-18. O fluxo abaixo é mantido conforme medido — se o upstream posteriormente restaurar os registros, os mesmos passos se aplicam.
+> **Nota histórica:** o provedor está na lista de bloqueio do workspace desde 2026-10-18. O fluxo abaixo é mantido conforme medido — se o upstream restaurar os registros posteriormente, os mesmos passos se aplicam.
 
-## 🎁 Camada gratuita — quanto você recebe
+## 🎁 Nível gratuito — quanto você recebe
 
-**Grátis em uma conta sem créditos** (sem claim, sem recarga, sem saldo necessário) — limites por conta medidos ao vivo:
+**Gratuito em uma conta sem créditos** (sem claim, sem recarga, sem saldo necessário) — limites por conta medidos ao vivo:
 
 | O quê | Valor |
 | --- | --- |
 | Portão de registro | **1 registro por IP de saída a cada 24 h** — uma saída por conta |
-| Modelos gratuitos | `qwen/qwen3.7-flash:free` (contexto de 1M, o verificador), `deepseek/deepseek-v4-flash-0731free:free` (1,05M), `auto:free` (roteador) |
-| Cota de modelos gratuitos | **10 RPM / 60 requisições por dia**, 2 simultâneas, compartilhadas entre modelos gratuitos, reset às 00:00 UTC |
+| Modelos gratuitos | `qwen/qwen3.7-flash:free` (contexto de 1M, o verificador), `deepseek/deepseek-v4-flash-0731free:free` (1.05M), `auto:free` (roteador) |
+| Cota de modelos gratuitos | **10 RPM / 60 requisições por dia**, 2 simultâneas, compartilhadas entre os modelos gratuitos, reset às 00:00 UTC |
 | Com saldo | **20 RPM / 120 req/dia** assim que a conta tiver créditos |
-| Capacidade gratuita do site | **15 RPM** compartilhados — uma hora movimentada pode responder `429` mesmo quando sua própria cota está intacta; a ferramenta tenta novamente com `Retry-After` |
+| Capacidade gratuita do site | **15 RPM** compartilhados — uma hora movimentada pode responder `429` mesmo com sua própria cota intacta; a ferramenta tenta novamente com `Retry-After` |
 | Custo de uma chamada gratuita | `cost: 0` em toda conclusão |
 | Cadastro | `POST /api/v1/agents/register {name}` — sem caixa de correio, sem cartão |
 | A unidade que escala | **uma conta = uma chave** → `--count N` são N orçamentos diários de 60 requisições |
 
-> **Nota de escopo:** bazaarlink/ionet estão na lista de provedores bloqueados — a tabela é o último portão medido; o limite de 24 h/IP é o recurso vinculante.
+> **Nota de escopo:** bazaarlink/ionet estão na lista de provedores bloqueados — a tabela é o último portão medido; o limite de 24 h/IP é o recurso determinante.
 
-> 💡 A camada gratuita é definida pelo BazaarLink e pode mudar. Confira os números ao vivo em [bazaarlink.ai](https://bazaarlink.ai) — e deixe o próprio portão da ferramenta decidir:
+> 💡 O nível gratuito é definido pelo BazaarLink e pode mudar. Confira os números ao vivo em [bazaarlink.ai](https://bazaarlink.ai) — e deixe o próprio portão da ferramenta decidir:
 
 ```bash
-node src/cli.js --verify-only     # every key in keys.txt is re-tested with a real chat call
+node src/cli.js --verify-only     # toda chave em keys.txt é retestada com uma chamada de chat real
 ```
 
 ## 🤖 Modelos — todos os 124
 
 `GET https://api.bazaarlink.ai/v1/models` retorna **124 modelos**; o catálogo incluído em [`models.json`](models.json) (ou `src/models.json` no layout canônico) foi capturado de uma chave ao vivo.
 
-| Grátis em uma conta sem créditos | Observação |
+| Gratuitos em uma conta sem créditos | Observação |
 | --- | --- |
 | `qwen/qwen3.7-flash:free` | contexto de 1M, texto+imagem+vídeo — **o verificador aqui** |
-| `deepseek/deepseek-v4-flash-0731free:free` | 1,05M, texto — grátis |
+| `deepseek/deepseek-v4-flash-0731free:free` | 1.05M, texto — gratuito |
 | `auto:free` | roteador que escolhe um modelo gratuito |
 
-| Pagos (mesma chave, precisa de créditos — zero markup) | Exemplos |
+| Pagos (mesma chave, precisa de créditos — sem markup) | Exemplos |
 | --- | --- |
-| 110+ ids | `gpt-5.6-sol`, `gpt-5.6-terra`, `gpt-5.6-luna`, `claude-opus-5`, `claude-sonnet-5.5`, `claude-fable-5.1`, `gemini-3.8-flash`, `gemini-3.7-flash`, `grok-4.7`, `kimi-k3`, `glm-5.3`, `deepseek-v4-pro`, `qwen3.8-max` e o resto dos 124 |
+| 110+ ids | `gpt-5.6-sol`, `gpt-5.6-terra`, `gpt-5.6-luna`, `claude-opus-5`, `claude-sonnet-5.5`, `claude-fable-5.1`, `gemini-3.8-flash`, `gemini-3.7-flash`, `grok-4.7`, `kimi-k3`, `glm-5.3`, `deepseek-v4-pro`, `qwen3.8-max` e o restante dos 124 |
 
 Teste ao vivo de uma chave (exatamente o que o verificador faz):
 
@@ -123,21 +123,21 @@ print(client.chat.completions.create(model="qwen/qwen3.7-flash:free",
 git clone https://github.com/F0Rextasy/bazaarlink-bulk-apikey.git
 cd bazaarlink-bulk-apikey
 
-# 1) your proxy list — one per line (http://host:port | socks5://host:port | host:port)
+# 1) sua lista de proxies — uma por linha (http://host:port | socks5://host:port | host:port)
 printf 'socks5://127.0.0.1:1080\n' > proxies.txt
 
-# 2) go
-node launcher.js          # interactive: mint / verify / screen / settings
+# 2) vá
+node src/launcher.js      # interativo: mint / verify / screen / settings
 
-# or directly:
-node cli.js --count 30    # any N — 30 is just the default sample
+# ou diretamente:
+node src/cli.js --count 30    # qualquer N — 30 é apenas a amostra padrão
 ```
 
-A saída vai para `keys.txt` (uma chave por linha) e é espelhada em `%USERPROFILE%\\bazaarlink-keys.txt`. Uma chave é gravada **somente depois** que um `POST /v1/chat/completions` ao vivo em `qwen/qwen3.7-flash:free` responder `200` com `cost: 0`.
+A saída vai para `keys.txt` (uma chave por linha) e é espelhada em `%USERPROFILE%\\bazaarlink-keys.txt`. Uma chave é gravada **somente depois** que um `POST /v1/chat/completions` ao vivo em `qwen/qwen3.7-flash:free` responde `200` com `cost: 0`.
 
 ### 🖱️ O launcher
 
-O launcher é `launcher.js` na **raiz do repositório** (este repositório é plano — não há `src/`). Ele lembra suas respostas em `launcher.config.json` e executa `cli.js` com as flags corretas. `node launcher.js` mostra mint / verify / screen / settings; o cabeçalho pré-visualiza quantas saídas `proxies.txt` contém e quantas chaves estão no disco.
+O launcher é `src/launcher.js`; os scripts simples que ele executa (`src/cli.js`, `src/run.js`, `src/screen.js`, `src/verify.js`) aceitam as mesmas flags por conta própria. Ele lembra suas respostas em `launcher.config.json` e executa a CLI com as flags corretas. `node src/launcher.js` mostra mint / verify / screen / settings; o cabeçalho pré-visualiza quantas saídas `proxies.txt` contém e quantas chaves estão no disco.
 
 ## ✅ Verificado e funcionando — toda chave é testada
 
@@ -150,33 +150,33 @@ Não é uma lista de "provavelmente funciona". Toda chave gravada em `keys.txt` 
 | `POST /v1/chat/completions` (`qwen/qwen3.7-flash:free`) | **30/30 → HTTP 200**, conclusão real `content: "pong"`, `cost: 0` |
 | `GET /v1/models` | **200**, 124 modelos |
 
-Reveja a lista inteira a qualquer momento:
+Revalide a lista inteira a qualquer momento:
 
 ```bash
-node cli.js --verify-only        # verify any unproven key
-node cli.js --verify-only --all  # re-verify every key from scratch
+node src/cli.js --verify-only        # verifica qualquer chave não comprovada
+node src/cli.js --verify-only --all  # revalida toda chave do zero
 ```
 
 > **Portões de qualidade.** Toda chave aqui passou por um `chat-200` ao vivo antes de ser gravada em `keys.txt`
-> (chaves mortas nunca são entregues). Combinações de roteador seguem a mesma regra no nível do modelo: uma entrada é
+> (chaves mortas nunca são entregues). As combinações do roteador seguem a mesma regra no nível do modelo: uma entrada é
 > adicionada **somente se o modelo responder `chat-200` e puder chamar ferramentas** — um modelo sem suporte a ferramentas,
 > uma chave morta ou um provedor morto é descartado em vez de adicionado. Reexecute a etapa de verificação a qualquer momento;
-> as falhas são relatadas, nunca ocultadas.
+> as falhas são reportadas, nunca ocultadas.
 
 ## 🧭 Como funciona
 
 ```
-inbox (one address per account)                                  a fresh address per account
+inbox (um endereço por conta)                                  um endereço novo por conta
    │
-   ├─▶ sign-up: BazaarLink page → e-mail address → code / link from the inbox
-   ├─▶ session: the account's cookies or access token in hand
-   ├─▶ key mint: the account's key endpoint → plaintext key returned once (written to disk immediately)
-   └─▶ live proof: POST https://api.bazaarlink.ai/v1/chat/completions → real content = the key is live
+   ├─▶ cadastro: página do BazaarLink → endereço de e-mail → código / link da inbox
+   ├─▶ sessão: os cookies ou token de acesso da conta em mãos
+   ├─▶ emissão de chave: o endpoint de chave da conta → chave em texto simples retornada uma vez (gravada em disco imediatamente)
+   └─▶ prova ao vivo: POST https://api.bazaarlink.ai/v1/chat/completions → conteúdo real = a chave está ativa
 ```
 
 | Etapa | Chamada | Observações |
 | --- | --- | --- |
-| triagem | `screen.js` → `proxies.txt` ──probe──▶ saídas vivas e distintas → `outputs/exit-queue.json` | uma saída é gasta no máximo uma vez a cada 24 h |
+| triagem | `screen.js` → `proxies.txt` ──probe──▶ saídas ativas e distintas → `outputs/exit-queue.json` | uma saída é usada no máximo uma vez a cada 24 h |
 | registro | `POST https://api.bazaarlink.ai/api/v1/agents/register {name}` | `201 {api_key, claim_token, free_model}` |
 | verificação | `POST https://api.bazaarlink.ai/v1/chat/completions` (`qwen/qwen3.7-flash:free`) | o portão sobrevivível — um `429` com `Retry-After` é repetido |
 | persistência | `keys.txt` + `outputs/state.json` + espelho do provedor `%USERPROFILE%\\bazaarlink-keys.txt` | uma execução é checkpointada: reexecutar continua de onde parou |
@@ -184,21 +184,21 @@ inbox (one address per account)                                  a fresh address
 ## ⚙️ Opções da CLI
 
 ```bash
-node cli.js --count N                 # screen exits → mint → verify (any N, default 30)
-node cli.js --verify-only [--all]     # re-verify unproven / all keys
-node cli.js --screen --chunk 200      # only screen your proxy list
-node cli.js --help
+node src/cli.js --count N                 # triagem de saídas → mint → verify (qualquer N, padrão 30)
+node src/cli.js --verify-only [--all]     # revalida chaves não comprovadas / todas
+node src/cli.js --screen --chunk 200      # apenas faz a triagem da sua lista de proxies
+node src/cli.js --help
 ```
 
 | Opção | Padrão | Significado |
 | --- | --- | --- |
 | `--count N` | `30` | quantas contas criar — **qualquer N**, não há máximo |
 | `--chunk N` | `120` | linhas de proxy a triar por rodada |
-| `--rounds N` | `30` | máximo de rodadas de triagem → mint → verificação |
+| `--rounds N` | `30` | máximo de rodadas de triagem → mint → verify |
 | `--model m` | `qwen/qwen3.7-flash:free` | modelo usado para a verificação ao vivo |
 | `--no-verify` | desativado | pula a verificação de conclusão (não recomendado) |
 
-Os scripts subjacentes (`screen.js`, `mint.js`, `verify.js`, `run.js`) aceitam as mesmas flags e podem ser executados por conta própria. Todos os caminhos (`proxies.txt`, `keys.txt`, `outputs/`) estão na **raiz do repositório** neste layout plano.
+Os scripts subjacentes (`src/screen.js`, `src/mint.js`, `src/verify.js`, `src/run.js`) aceitam as mesmas flags e podem ser executados por conta própria. Todos os caminhos de dados (`proxies.txt`, `keys.txt`, `outputs/`) ficam na **raiz do repositório**, um nível acima de `src/`.
 
 ## 🛰️ Atrás de um proxy
 
@@ -206,28 +206,28 @@ Os scripts subjacentes (`screen.js`, `mint.js`, `verify.js`, `run.js`) aceitam a
 
 Toda requisição usa `https.request` + `createAgent(parseProxy(line))` — SOCKS4/4a, SOCKS5 e HTTP CONNECT funcionam. O `fetch` do `undici` nunca é usado, porque ele ignora a opção `agent` e vazaria silenciosamente seu IP real.
 
-Cada proxy é triado ao vivo (acessibilidade à API) antes de ser enfileirado, uma saída já gasta em uma conta nunca é reutilizada, e saídas gratuitas decaem em minutos — então a triagem roda em pequenos blocos checkpointados intercalados com a criação, em vez de uma longa passagem única.
+Cada proxy é triado ao vivo (acessibilidade da API) antes de entrar na fila, uma saída já usada em uma conta nunca é reutilizada, e saídas gratuitas decaem em minutos — por isso a triagem roda em pequenos blocos checkpointados intercalados com a emissão, em vez de uma única passagem longa.
 
-**Não há fallback de conexão direta.** Se o pool secar, a execução para e avisa, em vez de criar a partir do seu próprio IP.
+**Não há fallback de conexão direta.** Se o pool secar, a execução para e avisa, em vez de emitir a partir do seu próprio IP.
 
 ## 📄 Arquivos
 
 | Caminho | Conteúdo |
 | --- | --- |
-| `keys.txt` | uma chave por linha — ignorado pelo git, nunca commitado |
-| [`models.json`](models.json) | o catálogo completo de 124 modelos (`GET /v1/models` medido) |
+| `keys.txt` | uma chave por linha — ignorada pelo git, nunca commitada |
+| [`models.json`](models.json) | o catálogo completo de 124 modelos (medido via `GET /v1/models`) |
 | `outputs/accounts.json` | registro por conta (nome, saída, proxy, status, verificação) sem chaves brutas |
 | `outputs/state.json` | estado de execução retomável (contém chaves, ignorado pelo git) |
-| `outputs/exit-queue.json` | saídas triadas aguardando para serem gastas |
-| `cli.js` · `launcher.js` · `mint.js` · `screen.js` · `verify.js` · `run.js` · `proxy.js` | a ferramenta — tudo na **raiz do repositório** (layout plano) |
+| `outputs/exit-queue.json` | saídas triadas aguardando serem usadas |
+| `src/cli.js` · `src/launcher.js` · `src/mint.js` · `src/screen.js` · `src/verify.js` · `src/run.js` · `src/proxy.js` | a ferramenta — `src/` contém os scripts, os arquivos de dados ficam na raiz do repositório |
 
 ## 🔌 Conectar ao 9Router
 
-[9Router](https://9router.com) é um roteador auto-hospedado e compatível com OpenAI. O BazaarLink serve inferência compatível com OpenAI em `https://api.bazaarlink.ai/v1`, então o conector registra **um nó de provedor `openai-compatible`** (prefixo `bazaarlink`) e anexa cada chave em `keys.txt` como uma conexão — `bazaarlink-001`, `bazaarlink-002`, … Reexecutá-lo é idempotente.
+O [9Router](https://9router.com) é um roteador auto-hospedado e compatível com OpenAI. O BazaarLink serve inferência compatível com OpenAI em `https://api.bazaarlink.ai/v1`, então o conector registra **um provider-node `openai-compatible`** (prefixo `bazaarlink`) e anexa toda chave em `keys.txt` como uma conexão — `bazaarlink-001`, `bazaarlink-002`, … Reexecutá-lo é idempotente.
 
 ```bash
-node src/connect-9router.js                    # every key in keys.txt
-node src/connect-9router.js --model <id>       # pin the connection's default model
+node src/connect-9router.js                    # toda chave em keys.txt
+node src/connect-9router.js --model <id>       # fixa o modelo padrão da conexão
 ```
 
 Padrões: `--base http://localhost:20128`, `--password 123456`, `--name "BazaarLink"`, `--prefix bazaarlink`, `--base-url https://api.bazaarlink.ai/v1`, `--model qwen/qwen3.7-flash:free`. Os modelos são então servidos como `bazaarlink/<model id>` — `bazaarlink/qwen/qwen3.7-flash:free`, `bazaarlink/deepseek/deepseek-v4-flash-0731free:free`, `bazaarlink/auto:free` — com balanceamento de carga entre todas as conexões:
@@ -241,11 +241,11 @@ curl http://localhost:20128/v1/chat/completions \
 
 ## 🔌 Conectar ao OmniRoute
 
-[OmniRoute](https://omniroute.online) é um roteador auto-hospedado e compatível com OpenAI. O conector faz o mesmo trabalho lá — um nó `openai-compatible` (prefixo `bazaarlink`), uma conexão por chave em `keys.txt`:
+O [OmniRoute](https://omniroute.online) é um roteador auto-hospedado e compatível com OpenAI. O conector faz o mesmo trabalho lá — um node `openai-compatible` (prefixo `bazaarlink`), uma conexão por chave em `keys.txt`:
 
 ```bash
-node src/connect-omniroute.js                  # every key in keys.txt
-node src/connect-omniroute.js --model <id>     # pin the connection's default model
+node src/connect-omniroute.js                  # toda chave em keys.txt
+node src/connect-omniroute.js --model <id>     # fixa o modelo padrão da conexão
 ```
 
 Padrões: `--base http://localhost:20128`, `--password 123456`, `--name "BazaarLink"`, `--prefix bazaarlink`, `--base-url https://api.bazaarlink.ai/v1`, `--model qwen/qwen3.7-flash:free`.
@@ -257,19 +257,19 @@ curl http://localhost:20128/v1/chat/completions \
   -d '{"model":"bazaarlink/qwen/qwen3.7-flash:free","messages":[{"role":"user","content":"hi"}]}'
 ```
 
-## 🔑 O que uma chave te dá
+## 🔑 O que uma chave oferece
 
 | | |
 | --- | --- |
 | 🏢 Provedor | **BazaarLink** — [bazaarlink.ai](https://bazaarlink.ai) |
-| 🎁 O que o provedor dá | 124 modelos via um único POST não autenticado — qwen3.7-flash:free grátis, sem e-mail, sem cartão |
-| 🔑 O que uma chave te dá | uma chave de API limitada à sua própria conta: os 124 ids de modelo no endpoint abaixo, nos limites do seu plano. A cota fica na **conta**, que é exatamente por que esta ferramenta cria uma conta por chave |
+| 🎁 O que o provedor oferece | 124 modelos via um único POST não autenticado — qwen3.7-flash:free gratuito, sem e-mail, sem cartão |
+| 🔑 O que uma chave oferece | uma chave de API limitada à sua própria conta: os 124 ids de modelo no endpoint abaixo, nos limites do seu plano. A cota fica na **conta**, que é exatamente por isso que esta ferramenta cria uma conta por chave |
 | 🌐 Formato da API | Compatível com OpenAI: `POST https://api.bazaarlink.ai/v1/chat/completions` |
-| 🔒 Seus dados | apenas bazaarlink.ai e o backend de caixa de entrada que você configurar são contatados; as chaves ficam na sua máquina |
+| 🔒 Seus dados | apenas bazaarlink.ai e o backend de inbox que você configurar são contatados; as chaves ficam na sua máquina |
 
 ## 🐞 Problemas
 
-O pool gratuito do BazaarLink é compartilhado em todo o site e às vezes fica cheio; a verificação repete `429`s com o `Retry-After` do servidor e um breve backoff. Se uma execução travar, verifique `outputs/accounts.json` — ele registra exatamente quais saídas foram gastas e quais falharam. Algo mais parece errado? **[Abra uma issue](../../issues)** com o comando que você executou e a saída exata; PRs são bem-vindos. Se o portão da lista de bloqueio ainda retornar `403`/throttle, a ferramenta para nessa etapa e avisa — a tabela da camada gratuita acima é o último portão medido.
+O pool gratuito do BazaarLink é compartilhado em todo o site e às vezes fica cheio; a verificação repete `429`s com o `Retry-After` do servidor e um breve backoff. Se uma execução travar, verifique `outputs/accounts.json` — ele registra exatamente quais saídas foram usadas e quais falharam. Algo mais parece errado? **[Abra uma issue](../../issues)** com o comando que você executou e a saída exata; PRs são bem-vindos. Se o portão da lista de bloqueio ainda retornar `403`/throttle, a ferramenta para nessa etapa e avisa — a tabela do nível gratuito acima é o último portão medido.
 
 ## 📄 Licença
 

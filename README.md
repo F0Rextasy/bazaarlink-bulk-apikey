@@ -127,16 +127,16 @@ cd bazaarlink-bulk-apikey
 printf 'socks5://127.0.0.1:1080\n' > proxies.txt
 
 # 2) go
-node launcher.js          # interactive: mint / verify / screen / settings
+node src/launcher.js      # interactive: mint / verify / screen / settings
 # or directly:
-node cli.js --count 30    # any N — 30 is just the default sample
+node src/cli.js --count 30    # any N — 30 is just the default sample
 ```
 
 Output lands in `keys.txt` (one key per line) and is mirrored to `%USERPROFILE%\\bazaarlink-keys.txt`. A key is written **only after** a live `POST /v1/chat/completions` on `qwen/qwen3.7-flash:free` answers `200` with `cost: 0`.
 
 ### 🖱️ The launcher
 
-The launcher is `launcher.js` at the **repository root** (this repo is flat — there is no `src/`). It remembers your answers in `launcher.config.json` and runs `cli.js` with the right flags. `node launcher.js` shows mint / verify / screen / settings; the header previews how many exits `proxies.txt` holds and how many keys are on disk.
+The launcher is `src/launcher.js`; the flat scripts it drives (`src/cli.js`, `src/run.js`, `src/screen.js`, `src/verify.js`) take the same flags on their own. It remembers your answers in `launcher.config.json` and runs the CLI with the right flags. `node src/launcher.js` shows mint / verify / screen / settings; the header previews how many exits `proxies.txt` holds and how many keys are on disk.
 
 ## ✅ Verified working — every key is tested
 
@@ -152,8 +152,8 @@ Not a "probably works" list. Every key written to `keys.txt` is proven against t
 Re-check the whole list at any time:
 
 ```bash
-node cli.js --verify-only        # verify any unproven key
-node cli.js --verify-only --all  # re-verify every key from scratch
+node src/cli.js --verify-only        # verify any unproven key
+node src/cli.js --verify-only --all  # re-verify every key from scratch
 ```
 
 > **Quality gates.** Every key here passed a live `chat-200` before it was written to `keys.txt`
@@ -183,10 +183,10 @@ inbox (one address per account)                                  a fresh address
 ## ⚙️ CLI options
 
 ```bash
-node cli.js --count N                 # screen exits → mint → verify (any N, default 30)
-node cli.js --verify-only [--all]     # re-verify unproven / all keys
-node cli.js --screen --chunk 200      # only screen your proxy list
-node cli.js --help
+node src/cli.js --count N                 # screen exits → mint → verify (any N, default 30)
+node src/cli.js --verify-only [--all]     # re-verify unproven / all keys
+node src/cli.js --screen --chunk 200      # only screen your proxy list
+node src/cli.js --help
 ```
 
 | Option | Default | Meaning |
@@ -197,7 +197,7 @@ node cli.js --help
 | `--model m` | `qwen/qwen3.7-flash:free` | model used for the live verification |
 | `--no-verify` | off | skip the completion check (not recommended) |
 
-The underlying scripts (`screen.js`, `mint.js`, `verify.js`, `run.js`) take the same flags and can be run on their own. All paths (`proxies.txt`, `keys.txt`, `outputs/`) are at the **repository root** in this flat layout.
+The underlying scripts (`src/screen.js`, `src/mint.js`, `src/verify.js`, `src/run.js`) take the same flags and can be run on their own. All data paths (`proxies.txt`, `keys.txt`, `outputs/`) are at the **repository root**, one level above `src/`.
 
 ## 🛰️ Behind a proxy
 
@@ -218,7 +218,7 @@ Each proxy is screened live (API reachability) before it is queued, an exit alre
 | `outputs/accounts.json` | per-account record (name, exit, proxy, status, verification) with no raw keys |
 | `outputs/state.json` | resumable run state (holds keys, git-ignored) |
 | `outputs/exit-queue.json` | screened exits waiting to be spent |
-| `cli.js` · `launcher.js` · `mint.js` · `screen.js` · `verify.js` · `run.js` · `proxy.js` | the tool — all at the **repository root** (flat layout) |
+| `src/cli.js` · `src/launcher.js` · `src/mint.js` · `src/screen.js` · `src/verify.js` · `src/run.js` · `src/proxy.js` | the tool — `src/` holds the scripts, the data files stay at the repository root |
 
 ## 🔌 Connect to 9Router
 
